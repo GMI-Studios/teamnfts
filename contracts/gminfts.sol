@@ -1,21 +1,16 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "./ERC721a.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "./ERC721Stripped.sol";
 
-contract GMITeamNFTs is ERC721A, Ownable, ReentrancyGuard {
+contract GMITeamNFTs is ERC721 {
     using Address for address;
-    using SafeMath for uint256;
 
     // needs to be unlocked for the mint function to work
     bool locked = false;
 
     // Contract Creation
-    constructor(string memory newBaseURI) ERC721A("Iguana Gang", "XXX") { 
+    constructor(string memory newBaseURI) ERC721("Iguana Gang", "XXX") { 
         setBaseURI(newBaseURI);
     }      
 
@@ -30,21 +25,7 @@ contract GMITeamNFTs is ERC721A, Ownable, ReentrancyGuard {
      */
     function mintMultipleToUser(uint256 _amount, address[] addressUser) external onlyOwner {
         for (uint i=0; i<addressUser.length; 1++) {
-            _safeMint(addressUser[i], _amount);
+            _mint(addressUser[i], _amount);
         }
-
-        setLocked(val);
     }   
-
-    function setLocked(bool val) internal {
-        locked = val;
-    }
-
- function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override {
-        require(!locked, "Cannot transfer - currently locked");
-    }
 }
