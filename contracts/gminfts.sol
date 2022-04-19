@@ -18,10 +18,10 @@ contract GMITeamNFTs is ERC721, Ownable {
 
     /// @notice Mints _amount number of NFTs to an array of addresses
     /// @param _amount number of NFTs to mint
-    /// @param addressUser array of addresses to mint to    
+    /// @param _addressUser array of addresses to mint to    
     function mintMultipleToUser(uint256 _amount, address[] memory _addressUser) external onlyOwner {
-        for (uint i=1; i<addressUser.length; i++) {
-            _mint(addressUser[i], _amount);
+        for (uint i=1; i<_addressUser.length; i++) {
+            _mint(_addressUser[i], _amount);
         }
     }   
 
@@ -40,6 +40,6 @@ contract GMITeamNFTs is ERC721, Ownable {
         address to,
         uint256 tokenId
     ) internal virtual override {
-        require(tx.origin == owner);
+        require(tx.origin == owner());
     }    
 }
