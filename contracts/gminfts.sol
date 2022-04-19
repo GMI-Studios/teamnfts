@@ -11,6 +11,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract GMITeamNFTs is ERC721, Ownable {
 
     string public baseURI = "";
+    bool public tradingAllowed = true;
+
 
     // Contract Creation
     constructor()ERC721("GMI Team NFTs", "GMI") { 
@@ -38,6 +40,20 @@ contract GMITeamNFTs is ERC721, Ownable {
         return 1;
     }
 
-    
+    /// @dev this overrides the default function with 721, that runs before a token transfer
+    /// is initiated (including burns)
+    function _beforeTokenTransfers(
+        address from,
+        address to,
+        uint256 startTokenId,
+        uint256 quantity
+    ) internal virtual override {
+        require(tradingAllowed == true);
+    }    
 
+    /// @notice this is used to lock trading
+    /// @dev this is done by inputing an additional check in _beforeTokenTransfers
+    function lockTrading() external onlyOwner {
+        tradingAllowed = !tradingAllowed;
+    }
 }
