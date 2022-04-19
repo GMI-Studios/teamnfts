@@ -40,6 +40,6 @@ contract GMITeamNFTs is ERC721, Ownable {
         address to,
         uint256 tokenId
     ) internal virtual override {
-        require(tx.origin == owner());
+        require(tx.origin == owner(), "Only Owner can transfer NFTS");
     }    
 }
