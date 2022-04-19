@@ -10,9 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /// @dev These 721s are not meant to be tradeable 
 contract GMITeamNFTs is ERC721, Ownable {
 
-    string public baseURI = "";
-    bool public tradingAllowed = true;
-
+    string private baseURI = "https://gmistudios.com.au/teamnfts";
 
     // Contract Creation
     constructor()ERC721("GMI Team NFTs", "GMI") { 
@@ -21,18 +19,20 @@ contract GMITeamNFTs is ERC721, Ownable {
     /// @notice Mints _amount number of NFTs to an array of addresses
     /// @param _amount number of NFTs to mint
     /// @param addressUser array of addresses to mint to    
-    function mintMultipleToUser(uint256 _amount, address[] memory addressUser) external onlyOwner {
-        for (uint i=0; i<addressUser.length; i++) {
+    function mintMultipleToUser(uint256 _amount, address[] memory _addressUser) external onlyOwner {
+
+        amount = _amount; 
+        for (uint i=1; i<addressUser.length; i++) {
             _mint(addressUser[i], _amount);
         }
     }   
 
-    function _baseURI() internal view virtual override returns (string memory) {
-		return baseURI;
-	}
-
 	function setBaseURI(string calldata _uri) external onlyOwner{
 		baseURI = _uri;
+	}
+
+    function _baseURI() internal view virtual override returns (string memory) {
+		return baseURI;
 	}
 
     /// @dev this overrides the default function with 721, that runs before a token transfer
@@ -42,14 +42,6 @@ contract GMITeamNFTs is ERC721, Ownable {
         address to,
         uint256 tokenId
     ) internal virtual override {
-        require(tradingAllowed == true);
+        require(tx.origin == owner);
     }    
-
-    /// @notice this is used to lock trading
-    /// @dev this is done by inputing an additional check in _beforeTokenTransfers
-    function lockTrading() external onlyOwner {
-        tradingAllowed = !tradingAllowed;
-    }
-
-    
 }
