@@ -21,7 +21,7 @@ contract GMITeamNFTs is ERC721, Ownable {
     /// @notice Mints _amount number of NFTs to an array of addresses
     /// @param _amount number of NFTs to mint
     /// @param addressUser array of addresses to mint to    
-    function mintMultipleToUser(uint256 _amount, address[] addressUser) external onlyOwner {
+    function mintMultipleToUser(uint256 _amount, address[] memory addressUser) external onlyOwner {
         for (uint i=0; i<addressUser.length; i++) {
             _mint(addressUser[i], _amount);
         }
@@ -35,18 +35,12 @@ contract GMITeamNFTs is ERC721, Ownable {
 		baseURI = _uri;
 	}
 
-    // we don't actually need this, this is for more aesthetic purposes
-    function _startTokenId() internal view virtual override returns (uint256) {
-        return 1;
-    }
-
     /// @dev this overrides the default function with 721, that runs before a token transfer
     /// is initiated (including burns)
-    function _beforeTokenTransfers(
+    function _beforeTokenTransfer(
         address from,
         address to,
-        uint256 startTokenId,
-        uint256 quantity
+        uint256 tokenId
     ) internal virtual override {
         require(tradingAllowed == true);
     }    
@@ -56,4 +50,6 @@ contract GMITeamNFTs is ERC721, Ownable {
     function lockTrading() external onlyOwner {
         tradingAllowed = !tradingAllowed;
     }
+
+    
 }
